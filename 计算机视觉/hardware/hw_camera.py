@@ -4,7 +4,7 @@ class CameraManager:
     """
     物理相机管理引擎：处理外部USB外设或内置摄像头的挂载、帧率控制与画面获取。
     """
-    def __init__(self, camera_index=1, width=1920, height=1080):
+    def __init__(self, camera_index=0, width=1920, height=1080):
         self.camera_index = camera_index
         self.width = width
         self.height = height
