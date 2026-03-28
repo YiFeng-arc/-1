@@ -3,11 +3,10 @@ import time
 import cv2
 import numpy as np
 from PIL import Image, ImageTk
-from hw_camera import CameraManager
-from cv_tracker import VisionTracker
-from data_engine import FieldAnalyzer
-from hw_serial import SerialManager
-from calibration import RedCrossCalibrator, CalibrationResult
+from hardware import CameraManager, SerialManager
+from .cv_tracker import VisionTracker
+from .data_engine import FieldAnalyzer
+from .calibration import RedCrossCalibrator, CalibrationResult
 from openai import OpenAI
 
 class BusinessManager:
@@ -242,10 +241,10 @@ class BusinessManager:
         now = time.perf_counter()
 
         if self.calibration_result and self.calibration_result.success:
-            debug_img = self.calibrator.draw_calibration_result(frame, self.calibration_result)
-            self._cached_calib_preview = debug_img
+            if self._cached_calib_preview is None:
+                self._cached_calib_preview = self.calibrator.draw_calibration_result(frame, self.calibration_result)
+            debug_img = self._cached_calib_preview
         else:
-            # 标定预览检测降频，降低实时卡顿
             if (now - self._last_calib_preview_time) >= self._calib_preview_interval or self._cached_calib_preview is None:
                 result = self.calibrator.calibrate(frame)
                 self._cached_calib_preview = self.calibrator.draw_calibration_result(frame, result)

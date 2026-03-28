@@ -1,4 +1,3 @@
-import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
 import cv2
@@ -6,8 +5,8 @@ from PIL import Image, ImageTk
 import numpy as np
 
 # 导入模块
-from ui_manager import UIManager
-from business_manager import BusinessManager
+from ui import UIManager
+from business import BusinessManager
 
 # 设置现代UI主题
 ctk.set_appearance_mode("Light")  # 可选: "System", "Dark", "Light"
@@ -191,17 +190,10 @@ class ModernApp(ctk.CTk):
         success, message = self.business_manager.init_ai_client(token)
         if success:
             self.ui_manager.lbl_ai_status.configure(text=message, text_color="green")
-            self._append_chat("🤖 AI 助手", "我已经连接至云端大模型，可以解答您的物理问题了！\n")
+            self.ui_manager._append_chat("🤖 AI 助手", "我已经连接至云端大模型，可以解答您的物理问题了！\n")
         else:
             self.ui_manager.lbl_ai_status.configure(text=message, text_color="red")
-            self._append_chat("⚠️ 系统提示", f"初始化失败，详细错误：{message}")
-
-    def _append_chat(self, sender, text):
-        """添加聊天消息"""
-        self.ui_manager.chat_textbox.configure(state="normal")
-        self.ui_manager.chat_textbox.insert("end", f"{sender}: \n{text}\n\n")
-        self.ui_manager.chat_textbox.see("end") # 修复 CustomTkinter 滚动方法
-        self.ui_manager.chat_textbox.configure(state="disabled")
+            self.ui_manager._append_chat("⚠️ 系统提示", f"初始化失败，详细错误：{message}")
 
     def _send_ai_msg(self):
         """发送AI消息"""
@@ -210,7 +202,7 @@ class ModernApp(ctk.CTk):
             return
 
         self.ui_manager.chat_input.delete(0, "end")
-        self._append_chat("🧑(您)", user_text)
+        self.ui_manager._append_chat("🧑(您)", user_text)
         
         # 调用业务逻辑发送消息
         success, message = self.business_manager.send_ai_msg(user_text)

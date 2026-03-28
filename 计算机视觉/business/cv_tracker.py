@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from typing import Optional, Tuple
-from calibration import CalibrationResult
+from .calibration import CalibrationResult
 
 class VisionTracker:
     """
